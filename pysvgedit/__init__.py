@@ -28,4 +28,4 @@ from .SVGPath import SVGPath
 from .SVGRect import SVGRect
 from .SVGCircle import SVGCircle
 
-VERSION = "0.0.1"
+VERSION = "0.0.2rc0"

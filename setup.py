@@ -6,7 +6,7 @@ with open("README.md") as f:
 setuptools.setup(
 	name = "pysvgedit",
 	packages = setuptools.find_packages(),
-	version = "0.0.1",
+	version = "0.0.2rc0",
 	license = "gpl-3.0",
 	description = "Native Python library to create and edit SVG documents",
 	long_description = long_description,
@@ -14,7 +14,7 @@ setuptools.setup(
 	author = "Johannes Bauer",
 	author_email = "joe@johannes-bauer.com",
 	url = "https://github.com/johndoe31415/pysvgedit",
-	download_url = "https://github.com/johndoe31415/pysvgedit/archive/v0.0.1.tar.gz",
+	download_url = "https://github.com/johndoe31415/pysvgedit/archive/v0.0.2rc0.tar.gz",
 	keywords = [ "svg" ],
 	install_requires = [
 	],
