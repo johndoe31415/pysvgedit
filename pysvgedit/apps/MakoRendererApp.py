@@ -24,13 +24,26 @@ import tempfile
 import subprocess
 import mako.template
 import pysvgedit
+import datetime
 from .FriendlyArgumentParser import FriendlyArgumentParser
+
+class HelperClass():
+	pass
 
 class MakoRendererApp():
 	def __init__(self, args):
 		self._args = args
 		with open(self._args.datafile_json) as f:
 			self._template_data = json.load(f)
+		self._update_helper_vars()
+
+	def _update_helper_vars(self):
+		if self._args.functions != "none":
+			h = HelperClass()
+			self._template_data["h"] = h
+
+			if self._args.functions == "default":
+				h.now = datetime.datetime.now()
 
 	def _write_svg(self):
 		self._doc.writefile(self._args.outfile)
