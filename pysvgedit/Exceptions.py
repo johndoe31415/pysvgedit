@@ -18,16 +18,6 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from .Vector2D import Vector2D
-from .SVGDocument import SVGDocument
-from .SVGDefs import SVGDefs
-from .SVGGroup import SVGGroup
-from .SVGStyle import SVGStyle
-from .SVGText import SVGText
-from .SVGPath import SVGPath
-from .SVGRect import SVGRect
-from .SVGCircle import SVGCircle
-from .SVGAnimation import SVGAnimation
-from .Exceptions import SVGException
-
-VERSION = "0.0.2rc0"
+class SVGException(Exception): pass
+class SVGValidationException(SVGException): pass
+class SVGInputFileException(SVGException): pass

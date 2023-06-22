@@ -22,6 +22,7 @@ import enum
 import logging
 import functools
 from .SVGTransformation import ChangeVisibilityTransformation
+from .Exceptions import SVGInputFileException
 
 _log = logging.getLogger(__spec__.name)
 
@@ -106,9 +107,9 @@ class SVGAnimation():
 		# Ensure all layers have unique layer IDs
 		layer_ids = [layer.svgid for layer in self.considered_layers]
 		if any(layer_id is None for layer_id in layer_ids):
-			raise ValueError(f"{len(layer_ids)} layers found in SVG source, but some layers do not have an ID assigned.")
+			raise SVGInputFileException(f"{len(layer_ids)} layers found in SVG source, but some layers do not have an ID assigned.")
 		if len(layer_ids) != len(set(layer_ids)):
-			raise ValueError(f"{len(layer_ids)} layers found in SVG source, but some layers have duplicate layer IDs.")
+			raise SVGInputFileException(f"{len(layer_ids)} layers found in SVG source, but some layers have duplicate layer IDs.")
 
 		# Store commands to hide all layers first
 		shown_unprotected_layers = set()
