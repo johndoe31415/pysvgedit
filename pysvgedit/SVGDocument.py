@@ -18,12 +18,16 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+import functools
 import xml.dom.minidom
-from .SVGObject import SVGObject
+from .SVGObject import SVGObject, SVGWidthHeightObject
+from .SVGDefs import SVGDefs
 from .XMLTools import XMLTools
 
-class SVGDocument(SVGObject):
+class SVGDocument(SVGObject, SVGWidthHeightObject):
 	_TAG_NAME = "svg"
+	_DEFAULT_WIDTH = 300
+	_DEFAULT_HEIGHT = 150
 	_NAMESPACES = {
 		"inkscape": "http://www.inkscape.org/namespaces/inkscape",
 		"sodipodi": "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
@@ -46,21 +50,12 @@ class SVGDocument(SVGObject):
 				self._used_ids.add(attempt_id)
 				return attempt_id
 
-	@property
-	def width(self):
-		return float(self._default_get_attribute("width", 300))
-
-	@width.setter
-	def width(self, value):
-		self.node.setAttribute("width", str(value))
-
-	@property
-	def height(self):
-		return float(self._default_get_attribute("height", 150))
-
-	@height.setter
-	def height(self, value):
-		self.node.setAttribute("height", str(value))
+	@functools.cached_property
+	def defs(self):
+		try:
+			return self.get_first("defs")
+		except StopIteration:
+			return self.add(SVGDefs.new())
 
 	@classmethod
 	def new(cls):
@@ -73,6 +68,12 @@ class SVGDocument(SVGObject):
 		return cls(svg_node = root)
 
 	@classmethod
+	def frombytes(cls, bytes_data):
+		doc = xml.dom.minidom.parseString(bytes_data)
+		root = XMLTools.find_first_element(doc, "svg")
+		return cls(root)
+
+	@classmethod
 	def read(cls, f):
 		doc = xml.dom.minidom.parse(f)
 		root = XMLTools.find_first_element(doc, "svg")
@@ -82,6 +83,9 @@ class SVGDocument(SVGObject):
 	def readfile(cls, filename):
 		with open(filename, "rb") as f:
 			return cls.read(f)
+
+	def asbytes(self):
+		return self.node.ownerDocument.toxml(encoding = "utf-8")
 
 	def write(self, f):
 		self.node.ownerDocument.writexml(f)
@@ -98,4 +102,4 @@ class SVGDocument(SVGObject):
 			return None
 
 	def __str__(self):
-		return f"SVGDocument<{self.width:.0f} x {self.height:.0f}>"
+		return f"SVGDocument<{self.extents.x:.0f} x {self.extents.y:.0f}>"

@@ -18,6 +18,7 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+from .SVGRect import SVGRect
 from .SVGObject import SVGObject, SVGXYObject, SVGStyleObject
 from .XMLTools import XMLTools
 
@@ -62,11 +63,20 @@ class SVGText(SVGObject, SVGStyleObject):
 	_TAG_NAME = "text"
 
 	@classmethod
-	def new(cls, pos = None, text = ""):
+	def new(cls, pos = None, rect_extents = None, text = ""):
 		svg_text = cls(cls._new_element())
 		svg_text.node.setAttribute("xml:space", "preserve")
-		if pos is not None:
+		if (pos is not None) and (rect_extents is None):
+			# Normal text with position
 			svg_text.pos = pos
+		elif (pos is not None) and (rect_extents is not None):
+			# Text within rectangle (as definition)
+			def post_add_hook(parent):
+				rect = parent.svg_document.defs.add(SVGRect.new(pos = pos, extents = rect_extents))
+				rect.style.clear()
+				svg_text.style.shape_inside = rect
+			svg_text.post_add_hook = post_add_hook
+
 		svg_text.style.default_text()
 		svg_text.node.appendChild(SVGTextSpan.new(pos = pos, text = text).node)
 		return svg_text

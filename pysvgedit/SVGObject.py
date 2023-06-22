@@ -36,9 +36,21 @@ class SVGXYObject():
 		self.node.setAttribute(self._Y_ATTRIBUTE_NAME, str(value.y))
 
 class SVGWidthHeightObject():
+	_DEFAULT_WIDTH = 0
+	_DEFAULT_HEIGHT = 0
+
+	def _deunify(self, name, default_value):
+		value = self._default_get_attribute(name)
+		if value is None:
+			return default_value
+		if value.endswith("mm"):
+			return float(value[:-2]) / 25.4 * 96
+		else:
+			return float(value)
+
 	@property
 	def extents(self):
-		return Vector2D(x = self._get_float_attribute("width"), y = self._get_float_attribute("height"))
+		return Vector2D(x = self._deunify("width", self._DEFAULT_WIDTH), y = self._deunify("height", self._DEFAULT_HEIGHT))
 
 	@extents.setter
 	def extents(self, value: Vector2D):
@@ -100,6 +112,9 @@ class SVGObject():
 		svg_object.node.ownerDocument = self.node.ownerDocument
 		if svg_object.svgid is None:
 			svg_object.svgid = self.svg_document.get_unused_id()
+		if hasattr(svg_object, "post_add_hook"):
+			svg_object.post_add_hook(self)
+			svg_object.post_add_hook = None
 		return svg_object
 
 	@classmethod

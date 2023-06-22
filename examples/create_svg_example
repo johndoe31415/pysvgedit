@@ -21,8 +21,7 @@
 import pysvgedit
 
 doc = pysvgedit.SVGDocument.new()
-doc.width = 200
-doc.height = 100
+doc.extents = pysvgedit.Vector2D(200, 100)
 
 defs = doc.add(pysvgedit.SVGDefs.new())
 define_rect = defs.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(30, 30), extents = pysvgedit.Vector2D(150, 50)))
@@ -38,6 +37,8 @@ text.style["font-family"] = "Fira Sans"
 text.style["fill"] = "#ff0000"
 text.style["text-align"] = "justify"
 text.style.shape_inside = define_rect
+
+text = layer.add(pysvgedit.SVGText.new(pos = pysvgedit.Vector2D(210, 100), rect_extents = pysvgedit.Vector2D(75, 75), text = "This is a different rectangle wrapping definition"))
 
 rect = layer.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(10, 10), extents = pysvgedit.Vector2D(200, 100)))
 rect.style["stroke"] = "#00ff00"
@@ -55,7 +56,6 @@ path.arcto(rect.p3, radius = 40)
 path.arcto(rect.p2, radius = 40)
 path.arcto(rect.p1, radius = 20)
 path.style["stroke"] = "#ff8000"
-
 
 circle = layer.add(pysvgedit.SVGCircle.new(pos = define_circle.pos, radius = define_circle.radius))
 circle.style["stroke"] = "#0000ff"

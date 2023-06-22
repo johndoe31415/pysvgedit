@@ -40,8 +40,9 @@ class FormatTextTransformation(SVGTransformation):
 		self._template_vars = template_vars
 
 	def apply(self):
-		for tspan in self.svg_object.tspans:
+		for tspan in self.svg_object.walk("tspan"):
 			tspan.text = tspan.text.format(**self._template_vars)
+
 
 class ChangeVisibilityTransformation(SVGTransformation):
 	_IDENTIFIER = "visibility"

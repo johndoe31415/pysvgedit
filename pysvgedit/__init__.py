@@ -19,16 +19,17 @@
 #
 
 from .Vector2D import Vector2D
-from .SVGDocument import SVGDocument
 from .SVGDefs import SVGDefs
+from .SVGDocument import SVGDocument
 from .SVGGroup import SVGGroup
 from .SVGStyle import SVGStyle
-from .SVGText import SVGText
-from .SVGPath import SVGPath
 from .SVGRect import SVGRect
 from .SVGCircle import SVGCircle
+from .SVGText import SVGText
+from .SVGPath import SVGPath
 from .SVGAnimation import SVGAnimation, SVGAnimationMode
-from .SVGValidator import SVGValidator
+from .SVGValidator import SVGValidator, SVGValidatorErrorClass
+from .SVGTransformation import FormatTextTransformation, ChangeVisibilityTransformation
 from .Exceptions import SVGException
 
-VERSION = "0.0.3rc0"
+VERSION = "0.0.3"
