@@ -61,47 +61,22 @@ class SVGAnimation():
 		# Get all tags of considered layers
 		return { layer.svgid: self._get_layer_tags(layer) for layer in self.considered_layers }
 
-	@functools.cached_property
-	def protected_layers(self):
-		# Find out which layers are protected
-		return set(layer.svgid for (layer_id, layer_tags) in self._layer_tags.items() if SVGLayerTag.Protect in layer_tags)
-
 	@property
 	def visible_layers(self):
 		return [ layer for layer in self.all_layers if layer.style.is_visible ]
 
 	def _get_layer_tags(self, layer):
-		tags = set()
+		layer_tags = set()
 		label = layer.label
 		if ":" in label:
-			(tags, _) = label.split(":", maxsplit = 1)
-			for tag in tags:
+			(tag_string, _) = label.split(":", maxsplit = 1)
+			for tag in tag_string.split(","):
 				try:
 					tag = SVGLayerTag(tag)
-					tags.add(tag)
+					layer_tags.add(tag)
 				except ValueError as e:
-					_log.warning("Unknown layer tag in %s layer %s: %s", self._svg_filename, layer_id, tag)
-		return tags
-
-	def _show_layer(self, layer_id):
-		self._svg_transforms.append({
-			"cmd":			"show_layer",
-			"layer_id":		layer_id,
-		})
-		if SVGLayerTag.Protect not in self._layer_tags[layer_id]:
-			self._shown_unprotected_layers.add(layer_id)
-
-	def _hide_layer(self, layer_id):
-		self._svg_transforms.append({
-			"cmd":			"hide_layer",
-			"layer_id":		layer_id,
-		})
-		if layer_id in self._shown_unprotected_layers:
-			self._shown_unprotected_layers.remove(layer_id)
-
-	def _hide_all_layers(self):
-		for layer_id in self._considered_layers:
-			self._hide_layer(layer_id)
+					_log.warning("Unknown layer tag in layer %s (label %s): %s", layer.svgid, layer.label, tag)
+		return layer_tags
 
 	def _generate_layer_transformations(self):
 		# Ensure all layers have unique layer IDs
@@ -112,7 +87,7 @@ class SVGAnimation():
 			raise SVGInputFileException(f"{len(layer_ids)} layers found in SVG source, but some layers have duplicate layer IDs.")
 
 		# Store commands to hide all layers first
-		shown_unprotected_layers = set()
+		shown_unprotected_layers = [ ]
 		svg_transforms = [ ChangeVisibilityTransformation(layer, visible = False) for layer in self.considered_layers ]
 
 		# Then go through the layers one-by-one and render then as appropriate
@@ -127,9 +102,13 @@ class SVGAnimation():
 				# Hide all below layers but those which are protected
 				for below_layer in shown_unprotected_layers:
 					svg_transforms.append(ChangeVisibilityTransformation(below_layer, visible = False))
+				shown_unprotected_layers = [ ]
 
 			# Then show the current layer
 			svg_transforms.append(ChangeVisibilityTransformation(layer, visible = True))
+
+			if SVGLayerTag.Protect not in tags:
+				shown_unprotected_layers.append(layer)
 
 			# If we're in a replacing mode, then hide the previous layer
 			if (self._animation_mode == SVGAnimationMode.Replace) and (previous_layer is not None):

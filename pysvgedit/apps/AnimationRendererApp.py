@@ -20,6 +20,8 @@
 
 import os
 import sys
+import tempfile
+import subprocess
 import pysvgedit
 from .FriendlyArgumentParser import FriendlyArgumentParser
 
@@ -32,11 +34,11 @@ class AnimationRendererApp():
 		if self._args.outdir is None:
 			return ""
 		else:
-			return self._outdir + "/"
+			return self._args.outdir + "/"
 
 	def run(self):
 		self._doc = pysvgedit.SVGDocument.readfile(self._args.infile_svg)
-		self._anim = pysvgedit.SVGAnimation(self._doc)
+		self._anim = pysvgedit.SVGAnimation(self._doc, animation_mode = pysvgedit.SVGAnimationMode(self._args.animation_mode))
 		tvars = {
 			"prefix": os.path.splitext(self._args.infile_svg)[0],
 		}
@@ -45,11 +47,18 @@ class AnimationRendererApp():
 			output_filename = f"{self.outdir}{self._args.filename_template.format(**tvars)}"
 			if self._args.verbose >= 1:
 				print(f"Frame {frameno}: {output_filename}")
-			frame.writefile(output_filename)
+			if not self._args.inkscape_render:
+				frame.writefile(output_filename)
+			else:
+				with tempfile.NamedTemporaryFile(prefix = "pysvgedit_", suffix = ".svg", mode = "w") as f:
+					frame.write(f)
+					f.flush()
+					subprocess.check_call([ "inkscape", "-o", output_filename, f.name ])
 
 	@classmethod
 	def main(cls):
 		parser = FriendlyArgumentParser(description = "Render an animated SVG file.")
+		parser.add_argument("-i", "--inkscape-render", action = "store_true", help = "Do not output raw SVG data, but render through Inkscape. Allows direct generation of PDF or PNG output.")
 		parser.add_argument("-m", "--animation-mode", choices = [ "compose", "compose-all", "replace" ], default = "compose", help = "Specify the animation mode to render in. Can be one of %(choices)s, defaults to %(default)s.")
 		parser.add_argument("-n", "--filename-template", metavar = "template", default = "{prefix}_{frameno:02d}.svg", help = "Can specify a filename template. Defaults to '%(default)s'.")
 		parser.add_argument("-v", "--verbose", action = "count", default = 0, help = "Increases verbosity. Can be specified multiple times to increase.")
