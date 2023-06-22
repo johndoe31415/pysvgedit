@@ -24,7 +24,6 @@ import logging
 import functools
 import subprocess
 from .Exceptions import SVGValidationException
-from .SVGStyle import SVGStyle
 
 _log = logging.getLogger(__spec__.name)
 
@@ -52,7 +51,7 @@ class SVGValidator():
 			if self._check_missing_fonts == SVGValidatorErrorClass.EmitWarning:
 				_log.warning("SVG document is referencing missing font: %s", font_name)
 			elif self._check_missing_fonts == SVGValidatorErrorClass.ThrowException:
-				raise SVGValidationError(f"SVG document is referencing missing font: {font_name}")
+				raise SVGValidationException(f"SVG document is referencing missing font: {font_name}")
 
 	def _validate_fonts(self, svg_document):
 		missing_fonts = set()

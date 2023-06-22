@@ -22,6 +22,7 @@ setuptools.setup(
 		"console_scripts": [
 			"svgmakorender = pysvgedit.apps.MakoRendererApp:MakoRendererApp.main",
 			"svganimationrender = pysvgedit.apps.AnimationRendererApp:AnimationRendererApp.main",
+			"svgvalidate = pysvgedit.apps.ValidatorApp:ValidatorApp.main",
 		]
 	},
 	include_package_data = False,

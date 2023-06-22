@@ -19,7 +19,6 @@
 #
 
 from .SVGObject import SVGObject, SVGXYObject, SVGWidthHeightObject, SVGStyleObject
-from .Vector2D import Vector2D
 
 @SVGObject.register
 class SVGRect(SVGObject, SVGXYObject, SVGWidthHeightObject, SVGStyleObject):

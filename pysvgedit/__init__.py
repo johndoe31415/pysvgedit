@@ -27,7 +27,7 @@ from .SVGText import SVGText
 from .SVGPath import SVGPath
 from .SVGRect import SVGRect
 from .SVGCircle import SVGCircle
-from .SVGAnimation import SVGAnimation
+from .SVGAnimation import SVGAnimation, SVGAnimationMode
 from .SVGValidator import SVGValidator
 from .Exceptions import SVGException
 

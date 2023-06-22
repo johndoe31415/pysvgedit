@@ -29,8 +29,8 @@ class SVGXYObject():
 
 	@pos.setter
 	def pos(self, value: Vector2D):
-		self._node.setAttribute("x", str(value.x))
-		self._node.setAttribute("y", str(value.y))
+		self.node.setAttribute("x", str(value.x))
+		self.node.setAttribute("y", str(value.y))
 
 class SVGWidthHeightObject():
 	@property
@@ -39,8 +39,8 @@ class SVGWidthHeightObject():
 
 	@extents.setter
 	def extents(self, value: Vector2D):
-		self._node.setAttribute("width", str(value.x))
-		self._node.setAttribute("height", str(value.y))
+		self.node.setAttribute("width", str(value.x))
+		self.node.setAttribute("height", str(value.y))
 
 
 class SVGStyleObject():

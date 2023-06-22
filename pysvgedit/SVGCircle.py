@@ -18,8 +18,7 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from .SVGObject import SVGObject, SVGXYObject, SVGWidthHeightObject, SVGStyleObject
-from .Vector2D import Vector2D
+from .SVGObject import SVGObject, SVGXYObject, SVGStyleObject
 
 @SVGObject.register
 class SVGCircle(SVGObject, SVGXYObject, SVGStyleObject):

@@ -43,10 +43,6 @@ class FormatTextTransformation(SVGTransformation):
 		for tspan in self.svg_object.tspans:
 			tspan.text = tspan.text.format(**self._template_vars)
 
-	def apply(self):
-		raise NotImplementedError(self.__class__.__name__)
-
-
 class ChangeVisibilityTransformation(SVGTransformation):
 	_IDENTIFIER = "visibility"
 

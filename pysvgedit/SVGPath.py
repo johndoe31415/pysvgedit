@@ -26,7 +26,7 @@ class SVGPath(SVGObject, SVGStyleObject):
 	_TAG_NAME = "path"
 
 	def clear(self, pos):
-		path.node.setAttribute("d", f"M {pos.x} {pos.y}")
+		self.node.setAttribute("d", f"M {pos.x} {pos.y}")
 		return self
 
 	def __append_path(self, strvalue):
@@ -45,7 +45,7 @@ class SVGPath(SVGObject, SVGStyleObject):
 		return self
 
 	def bezierto(self, p1, p2, p3, relative = False):
-		self.__append_path(f"{'c' if relative else 'C'} {pos.x} {pos.y} {p1.x} {p1.y} {p2.x} {p2.y} {p3.x} {p3.y}")
+		self.__append_path(f"{'c' if relative else 'C'} {p1.x} {p1.y} {p2.x} {p2.y} {p3.x} {p3.y}")
 		return self
 
 	def arcto(self, pos, radius, xrotation = 0, large_arc = True, sweep = True, relative = False):

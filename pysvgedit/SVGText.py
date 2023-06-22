@@ -20,7 +20,6 @@
 
 from .SVGObject import SVGObject, SVGXYObject, SVGStyleObject
 from .XMLTools import XMLTools
-from .SVGStyle import SVGStyle
 
 @SVGObject.register
 class SVGTextSpan(SVGObject, SVGXYObject, SVGStyleObject):

@@ -22,9 +22,9 @@ import sys
 import json
 import tempfile
 import subprocess
+import datetime
 import mako.template
 import pysvgedit
-import datetime
 from .FriendlyArgumentParser import FriendlyArgumentParser
 
 class HelperClass():
