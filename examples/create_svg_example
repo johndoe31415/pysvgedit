@@ -1,0 +1,67 @@
+#!/usr/bin/python3
+#	pysvgedit - SVG manipulation toolkit
+#	Copyright (C) 2023-2023 Johannes Bauer
+#
+#	This file is part of pysvgedit.
+#
+#	pysvgedit is free software; you can redistribute it and/or modify
+#	it under the terms of the GNU General Public License as published by
+#	the Free Software Foundation; this program is ONLY licensed under
+#	version 3 of the License, later versions are explicitly excluded.
+#
+#	pysvgedit is distributed in the hope that it will be useful,
+#	but WITHOUT ANY WARRANTY; without even the implied warranty of
+#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#	GNU General Public License for more details.
+#
+#	You should have received a copy of the GNU General Public License
+#	along with pysvgedit; if not, write to the Free Software
+#	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+import pysvgedit
+
+doc = pysvgedit.SVGDocument.new()
+doc.width = 200
+doc.height = 100
+
+defs = doc.add(pysvgedit.SVGDefs.new())
+define_rect = defs.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(30, 30), extents = pysvgedit.Vector2D(150, 50)))
+define_rect.style.clear()
+define_circle = defs.add(pysvgedit.SVGCircle.new(pos = pysvgedit.Vector2D(-100, -100), radius = 50))
+define_circle.style.clear()
+
+layer = doc.add(pysvgedit.SVGGroup.new(is_layer = True))
+layer.label = "My fancy layer"
+
+text = layer.add(pysvgedit.SVGText.new(text = "Fira Sans red text inside a rectangle so it wraps"))
+text.style["font-family"] = "Fira Sans"
+text.style["fill"] = "#ff0000"
+text.style["text-align"] = "justify"
+text.style.shape_inside = define_rect
+
+rect = layer.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(10, 10), extents = pysvgedit.Vector2D(200, 100)))
+rect.style["stroke"] = "#00ff00"
+
+path = layer.add(pysvgedit.SVGPath.new(pysvgedit.Vector2D(10, 10)))
+path.lineto(pysvgedit.Vector2D(20, -30))
+path.lineto(pysvgedit.Vector2D(30, -20))
+path.lineto(pysvgedit.Vector2D(40, -25))
+path.arcto(pysvgedit.Vector2D(50, -25), large_arc = False, radius = 5)
+path.arcto(pysvgedit.Vector2D(60, -25), large_arc = False, radius = 5)
+path.arcto(pysvgedit.Vector2D(70, -25), sweep = False, radius = 5)
+path.bezierto(pysvgedit.Vector2D(10, 10), pysvgedit.Vector2D(20, 20), pysvgedit.Vector2D(40, 0), relative = True)
+path.lineto(rect.p4)
+path.arcto(rect.p3, radius = 40)
+path.arcto(rect.p2, radius = 40)
+path.arcto(rect.p1, radius = 20)
+path.style["stroke"] = "#ff8000"
+
+
+circle = layer.add(pysvgedit.SVGCircle.new(pos = define_circle.pos, radius = define_circle.radius))
+circle.style["stroke"] = "#0000ff"
+
+text = layer.add(pysvgedit.SVGText.new(text = "This is text in a circle that should wrap and be centered as well"))
+text.style["text-align"] = "center"
+text.style.shape_inside = define_circle
+
+doc.writefile("example.svg")

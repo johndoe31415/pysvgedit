@@ -34,12 +34,13 @@ class SVGTextSpan(SVGObject, SVGXYObject, SVGStyleObject):
 			self._text_node = tspan_node.appendChild(tspan_node.ownerDocument.createTextNode(""))
 
 	@classmethod
-	def new(cls, pos, text = ""):
+	def new(cls, pos = None, text = ""):
 		tspan_node = cls._new_element()
 		tspan_node.appendChild(tspan_node.ownerDocument.createTextNode(text))
 
 		svg_textspan = cls(tspan_node)
-		svg_textspan.pos = pos
+		if pos is not None:
+			svg_textspan.pos = pos
 		return svg_textspan
 
 	@property
@@ -61,12 +62,13 @@ class SVGText(SVGObject, SVGStyleObject):
 	_TAG_NAME = "text"
 
 	@classmethod
-	def new(cls, pos, text = ""):
+	def new(cls, pos = None, text = ""):
 		svg_text = cls(cls._new_element())
 		svg_text.node.setAttribute("xml:space", "preserve")
-		svg_text.pos = pos
+		if pos is not None:
+			svg_text.pos = pos
 		svg_text.style.default_text()
-		svg_text.node.appendChild(SVGTextSpan.new(pos, text).node)
+		svg_text.node.appendChild(SVGTextSpan.new(pos = pos, text = text).node)
 		return svg_text
 
 	@property

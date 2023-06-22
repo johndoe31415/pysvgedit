@@ -56,6 +56,10 @@ class SVGStyle():
 			return not hidden
 		return True
 
+	def clear(self):
+		self._style = { }
+		self._on_style_changed()
+
 	def hide(self):
 		self["display"] = "none"
 

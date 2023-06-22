@@ -23,14 +23,17 @@ from .SVGStyle import SVGStyle
 from .Vector2D import Vector2D
 
 class SVGXYObject():
+	_X_ATTRIBUTE_NAME = "x"
+	_Y_ATTRIBUTE_NAME = "y"
+
 	@property
 	def pos(self):
-		return Vector2D(x = self._get_float_attribute("x"), y = self._get_float_attribute("y"))
+		return Vector2D(x = self._get_float_attribute(self._X_ATTRIBUTE_NAME), y = self._get_float_attribute(self._Y_ATTRIBUTE_NAME))
 
 	@pos.setter
 	def pos(self, value: Vector2D):
-		self.node.setAttribute("x", str(value.x))
-		self.node.setAttribute("y", str(value.y))
+		self.node.setAttribute(self._X_ATTRIBUTE_NAME, str(value.x))
+		self.node.setAttribute(self._Y_ATTRIBUTE_NAME, str(value.y))
 
 class SVGWidthHeightObject():
 	@property

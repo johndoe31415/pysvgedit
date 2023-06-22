@@ -18,11 +18,28 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+from .Vector2D import Vector2D
 from .SVGObject import SVGObject, SVGXYObject, SVGWidthHeightObject, SVGStyleObject
 
 @SVGObject.register
 class SVGRect(SVGObject, SVGXYObject, SVGWidthHeightObject, SVGStyleObject):
 	_TAG_NAME = "rect"
+
+	@property
+	def p1(self):
+		return self.pos
+
+	@property
+	def p2(self):
+		return Vector2D(self.pos.x, self.pos.y + self.extents.y)
+
+	@property
+	def p3(self):
+		return self.pos + self.extents
+
+	@property
+	def p4(self):
+		return Vector2D(self.pos.x + self.extents.x, self.pos.y)
 
 	@classmethod
 	def new(cls, pos, extents):
