@@ -31,4 +31,4 @@ from .SVGAnimation import SVGAnimation, SVGAnimationMode
 from .SVGValidator import SVGValidator
 from .Exceptions import SVGException
 
-VERSION = "0.0.2rc0"
+VERSION = "0.0.2"
