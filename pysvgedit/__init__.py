@@ -32,4 +32,4 @@ from .SVGValidator import SVGValidator, SVGValidatorErrorClass
 from .SVGTransformation import FormatTextTransformation, ChangeVisibilityTransformation
 from .Exceptions import SVGException
 
-VERSION = "0.0.3"
+VERSION = "0.0.4rc0"
