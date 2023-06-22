@@ -136,7 +136,7 @@ class SVGStyle():
 	def _setitem(self, key, value):
 		changed = False
 		if (value is None) and (key in self._style):
-			del self._style[value]
+			del self._style[key]
 			changed = True
 		else:
 			changed = self[key] != value

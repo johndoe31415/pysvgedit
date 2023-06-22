@@ -21,6 +21,7 @@ setuptools.setup(
 	entry_points = {
 		"console_scripts": [
 			"svgmakorender = pysvgedit.apps.MakoRendererApp:MakoRendererApp.main"
+			"svganimationrender = pysvgedit.apps.AnimationRendererApp:AnimationRendererApp.main"
 		]
 	},
 	include_package_data = False,

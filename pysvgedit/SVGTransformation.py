@@ -18,15 +18,36 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from .Vector2D import Vector2D
-from .SVGDocument import SVGDocument
-from .SVGDefs import SVGDefs
-from .SVGGroup import SVGGroup
-from .SVGStyle import SVGStyle
-from .SVGText import SVGText
-from .SVGPath import SVGPath
-from .SVGRect import SVGRect
-from .SVGCircle import SVGCircle
-from .SVGAnimation import SVGAnimation
+class SVGTransformation():
+	_IDENTIFIER = None
 
-VERSION = "0.0.2rc0"
+	def __init__(self, svg_object):
+		self._svg_object = svg_object
+
+	@property
+	def svg_object(self):
+		return self._svg_object
+
+	def apply(self):
+		raise NotImplementedError(self.__class__.__name__)
+
+
+class FormatTextTransformation(SVGTransformation):
+	_IDENTIFIER = "format_text"
+
+	def apply(self):
+		raise NotImplementedError(self.__class__.__name__)
+
+
+class ChangeVisibilityTransformation(SVGTransformation):
+	_IDENTIFIER = "visibility"
+
+	def __init__(self, svg_object, visible):
+		super().__init__(svg_object)
+		self._visible = visible
+
+	def apply(self):
+		if self._visible:
+			self.svg_object.style.show()
+		else:
+			self.svg_object.style.hide()
