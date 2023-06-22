@@ -150,5 +150,12 @@ class SVGStyle():
 	def __getitem__(self, key: str):
 		return self._style.get(key)
 
+	def get(self, key: str, unstringify = False):
+		value = self._style.get(key)
+		if unstringify and (value is not None):
+			if (value.startswith("'") and value.endswith("'")) or (value.startswith("\"") and value.endswith("\"")):
+				value = value[1 : -1]
+		return value
+
 	def __str__(self):
 		return f"SVGStyle<{self._style}>"

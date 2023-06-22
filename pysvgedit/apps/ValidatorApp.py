@@ -18,17 +18,26 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from .Vector2D import Vector2D
-from .SVGDocument import SVGDocument
-from .SVGDefs import SVGDefs
-from .SVGGroup import SVGGroup
-from .SVGStyle import SVGStyle
-from .SVGText import SVGText
-from .SVGPath import SVGPath
-from .SVGRect import SVGRect
-from .SVGCircle import SVGCircle
-from .SVGAnimation import SVGAnimation
-from .SVGValidator import SVGValidator
-from .Exceptions import SVGException
+import os
+import sys
+import pysvgedit
+from .FriendlyArgumentParser import FriendlyArgumentParser
 
-VERSION = "0.0.2rc0"
+class ValidatorApp():
+	def __init__(self, args):
+		self._args = args
+
+	def run(self):
+		doc = pysvgedit.SVGDocument.readfile(self._args.infile_svg)
+		validator = pysvgedit.SVGValidator()
+		validator.validate(doc)
+
+	@classmethod
+	def main(cls):
+		parser = FriendlyArgumentParser(description = "Validate an SVG file.")
+		parser.add_argument("-v", "--verbose", action = "count", default = 0, help = "Increases verbosity. Can be specified multiple times to increase.")
+		parser.add_argument("infile_svg", help = "Input SVG file.")
+		args = parser.parse_args(sys.argv[1:])
+
+		app = cls(args)
+		return app.run()
