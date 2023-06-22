@@ -35,6 +35,14 @@ class SVGTransformation():
 class FormatTextTransformation(SVGTransformation):
 	_IDENTIFIER = "format_text"
 
+	def __init__(self, svg_object, template_vars):
+		super().__init__(svg_object)
+		self._template_vars = template_vars
+
+	def apply(self):
+		for tspan in self.svg_object.tspans:
+			tspan.text = tspan.text.format(**self._template_vars)
+
 	def apply(self):
 		raise NotImplementedError(self.__class__.__name__)
 
