@@ -18,7 +18,7 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from .Vector2D import Vector2D
+from .Vector2D import Vector2D, TransformationMatrix, SVGTransform
 from .SVGDefs import SVGDefs
 from .SVGDocument import SVGDocument
 from .SVGGroup import SVGGroup
@@ -30,6 +30,7 @@ from .SVGPath import SVGPath
 from .SVGAnimation import SVGAnimation, SVGAnimationMode
 from .SVGValidator import SVGValidator, SVGValidatorErrorClass
 from .SVGTransformation import FormatTextTransformation, ChangeVisibilityTransformation
+from .Convenience import Convenience
 from .Exceptions import SVGException
 
 VERSION = "0.0.4rc0"

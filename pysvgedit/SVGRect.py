@@ -41,6 +41,13 @@ class SVGRect(SVGObject, SVGXYObject, SVGWidthHeightObject, SVGStyleObject):
 	def p4(self):
 		return Vector2D(self.pos.x + self.extents.x, self.pos.y)
 
+	@property
+	def vertices(self):
+		yield self.p1
+		yield self.p2
+		yield self.p3
+		yield self.p4
+
 	@classmethod
 	def new(cls, pos, extents):
 		path = cls(cls._new_element())

@@ -20,7 +20,7 @@
 
 from .XMLTools import XMLTools
 from .SVGStyle import SVGStyle
-from .Vector2D import Vector2D
+from .Vector2D import Vector2D, SVGTransform
 
 class SVGXYObject():
 	_X_ATTRIBUTE_NAME = "x"
@@ -97,6 +97,11 @@ class SVGObject():
 	def label(self, value: str):
 		self.node.setAttribute("inkscape:label", value)
 
+	@property
+	def transformation_matrix(self):
+		if self.node.hasAttribute("transform"):
+			return SVGTransform.parse(self.node.getAttribute("transform"))
+
 	def _default_get_attribute(self, name, default_value = None):
 		return XMLTools.default_get_attribute(self.node, name, default_value = default_value)
 
@@ -147,6 +152,14 @@ class SVGObject():
 				raise ValueError(f"Class named '{object_class}' does not have a registered handler.")
 		else:
 			return object_class
+
+	def apply_transform(self, transformation_matrix):
+		matrix = self.transformation_matrix
+		if matrix is None:
+			matrix = transformation_matrix
+		else:
+			matrix = matrix * transformation_matrix
+		self.node.setAttribute("transform", SVGTransform.to_svg(matrix))
 
 	@classmethod
 	def register(cls, svg_object_class):

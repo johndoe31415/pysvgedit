@@ -59,9 +59,18 @@ path.style["stroke"] = "#ff8000"
 
 circle = layer.add(pysvgedit.SVGCircle.new(pos = define_circle.pos, radius = define_circle.radius))
 circle.style["stroke"] = "#0000ff"
-
-text = layer.add(pysvgedit.SVGText.new(text = "This is text in a circle that should wrap and be centered as well"))
+dtext = layer.add(pysvgedit.SVGText.new(text = "This is text in a circle that should wrap and be centered as well"))
 text.style["text-align"] = "center"
 text.style.shape_inside = define_circle
+
+text = layer.add(pysvgedit.SVGText.new(text = "This is rotated text."))
+text.apply_transform(pysvgedit.TransformationMatrix.rotate(0.7))
+
+rect = layer.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(50, 50), extents = pysvgedit.Vector2D(50, 50)))
+rect.apply_transform(pysvgedit.TransformationMatrix.rotate(0.9))
+matrix = rect.transformation_matrix
+for vertex in rect.vertices:
+	xformed = matrix.apply(vertex)
+	circle = layer.add(pysvgedit.SVGCircle.new(pos = xformed, radius = 3))
 
 doc.writefile("example.svg")

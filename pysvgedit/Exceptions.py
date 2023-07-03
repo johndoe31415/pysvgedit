@@ -21,3 +21,4 @@
 class SVGException(Exception): pass
 class SVGValidationException(SVGException): pass
 class SVGInputFileException(SVGException): pass
+class SVGLibUsageException(SVGException): pass
