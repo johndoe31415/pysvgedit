@@ -24,7 +24,7 @@ from .SVGObject import SVGObject, SVGXYObject, SVGStyleObject
 class SVGCircle(SVGObject, SVGXYObject, SVGStyleObject):
 	_TAG_NAME = "circle"
 	_X_ATTRIBUTE_NAME = "cx"
-	_X_ATTRIBUTE_NAME = "cy"
+	_Y_ATTRIBUTE_NAME = "cy"
 
 	@property
 	def radius(self):
