@@ -18,7 +18,9 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+import math
 from .SVGObject import SVGObject, SVGXYObject, SVGStyleObject
+from .Vector2D import Vector2D
 
 @SVGObject.register
 class SVGCircle(SVGObject, SVGXYObject, SVGStyleObject):
@@ -33,6 +35,12 @@ class SVGCircle(SVGObject, SVGXYObject, SVGStyleObject):
 	@radius.setter
 	def radius(self, value):
 		self.node.setAttribute("r", str(float(value)))
+
+	def hull_vertices(self, max_interpolation_count = 100):
+		pos = self.pos
+		r = self.radius
+		for i in range(max_interpolation_count):
+			yield pos + (r * Vector2D.angle((i / max_interpolation_count) * 2 * math.pi))
 
 	@classmethod
 	def new(cls, pos, radius):

@@ -59,7 +59,7 @@ path.style["stroke"] = "#ff8000"
 
 circle = layer.add(pysvgedit.SVGCircle.new(pos = define_circle.pos, radius = define_circle.radius))
 circle.style["stroke"] = "#0000ff"
-dtext = layer.add(pysvgedit.SVGText.new(text = "This is text in a circle that should wrap and be centered as well"))
+text = layer.add(pysvgedit.SVGText.new(text = "This is text in a circle that should wrap and be centered as well"))
 text.style["text-align"] = "center"
 text.style.shape_inside = define_circle
 
@@ -69,8 +69,25 @@ text.apply_transform(pysvgedit.TransformationMatrix.rotate(0.7))
 rect = layer.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(50, 50), extents = pysvgedit.Vector2D(50, 50)))
 rect.apply_transform(pysvgedit.TransformationMatrix.rotate(0.9))
 matrix = rect.transformation_matrix
-for vertex in rect.vertices:
+for vertex in rect.hull_vertices():
 	xformed = matrix.apply(vertex)
 	circle = layer.add(pysvgedit.SVGCircle.new(pos = xformed, radius = 3))
 
+
+group = doc.add(pysvgedit.SVGGroup.new())
+group.apply_transform(pysvgedit.TransformationMatrix.rotate(0.3))
+
+group = group.add(pysvgedit.SVGGroup.new())
+group.apply_transform(pysvgedit.TransformationMatrix.translate(pysvgedit.Vector2D(100, 200)))
+
+group = group.add(pysvgedit.SVGGroup.new())
+group.apply_transform(pysvgedit.TransformationMatrix.scale(0.9))
+
+rect = group.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(50, 50), extents = pysvgedit.Vector2D(50, 50)))
+matrix = rect.absolute_transformation_matrix
+for vertex in rect.hull_vertices():
+	xformed = matrix.apply(vertex)
+	circle = layer.add(pysvgedit.SVGCircle.new(pos = xformed, radius = 3))
+
+pysvgedit.Convenience.autosize(doc)
 doc.writefile("example.svg")

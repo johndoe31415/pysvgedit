@@ -97,10 +97,25 @@ class SVGObject():
 	def label(self, value: str):
 		self.node.setAttribute("inkscape:label", value)
 
+	def hull_vertices(self, max_interpolation_count = 100):
+		yield from iter(())
+
 	@property
 	def transformation_matrix(self):
 		if self.node.hasAttribute("transform"):
 			return SVGTransform.parse(self.node.getAttribute("transform"))
+
+	@property
+	def absolute_transformation_matrix(self):
+		transformation_matrix = None
+		for node in XMLTools.all_parent_elements(self.node):
+			if node.hasAttribute("transform"):
+				matrix = SVGTransform.parse(node.getAttribute("transform"))
+				if transformation_matrix is None:
+					transformation_matrix = matrix
+				else:
+					transformation_matrix = transformation_matrix * matrix
+		return transformation_matrix
 
 	def _default_get_attribute(self, name, default_value = None):
 		return XMLTools.default_get_attribute(self.node, name, default_value = default_value)
@@ -137,12 +152,24 @@ class SVGObject():
 	def get_first(self, object_class, constraint = None):
 		return next(self.get(object_class, constraint = constraint))
 
+	def getall(self):
+		for child in self.node.childNodes:
+			handled = self.attempt_handle(child)
+			if handled is not None:
+				yield handled
+
 	def walk(self, object_class, constraint = None):
 		object_class = self._resolve_object_class(object_class)
 		for node in XMLTools.walk_elements(self.node, object_class.get_tagname()):
 			node = object_class(node)
 			if (constraint is None) or constraint(node):
 				yield node
+
+	def walkall(self):
+		for child in XMLTools.walk_elements(self.node):
+			handled = self.attempt_handle(child)
+			if handled is not None:
+				yield handled
 
 	def _resolve_object_class(self, object_class):
 		if isinstance(object_class, str):
@@ -167,3 +194,15 @@ class SVGObject():
 			raise ValueError(f"{svg_object_class._TAG_NAME} of {svg_object_class} already registered.")
 		cls._REGISTERED_CLASSES[svg_object_class._TAG_NAME] = svg_object_class
 		return svg_object_class
+
+	@classmethod
+	def has_handler(cls, node):
+		return node.tagName in cls._REGISTERED_CLASSES
+
+	@classmethod
+	def attempt_handle(cls, node):
+		handler = cls._REGISTERED_CLASSES.get(node.tagName)
+		if handler is None:
+			return None
+		else:
+			return handler(node)

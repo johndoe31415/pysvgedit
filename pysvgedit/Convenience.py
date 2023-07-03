@@ -19,8 +19,10 @@
 #
 
 from .SVGText import SVGText
-from .Vector2D import Vector2D
+from .Vector2D import Vector2D, TransformationMatrix, SVGTransform
 from .Exceptions import SVGLibUsageException
+from .XMLTools import XMLTools
+from .SVGObject import SVGObject
 
 class Convenience():
 	_ALLOWED_HALIGN = set([ "left", "center", "right", "justify" ])
@@ -64,6 +66,55 @@ class Convenience():
 
 		parent.add(text_obj)
 
+
 	@classmethod
-	def autosize(cls, root):
+	def extents(cls, svg_object, transformation_matrix):
 		pass
+
+	@classmethod
+	def walk_with_transformation_matrix(cls, root):
+		def _transform_context_function(transformation_matrix, parent, child):
+			if child.hasAttribute("transform"):
+				matrix = SVGTransform.parse(child.getAttribute("transform"))
+				if transformation_matrix is None:
+					transformation_matrix = matrix
+				else:
+					transformation_matrix = transformation_matrix * matrix
+			return transformation_matrix
+
+		for (node, transformation_matrix) in XMLTools.walk_elements_with_context(root.node, root_context = root.transformation_matrix, transform_context_function = _transform_context_function, exclude = set([ "defs" ])):
+			svg_object = SVGObject.attempt_handle(node)
+			if svg_object is not None:
+				yield (svg_object, transformation_matrix)
+
+	@classmethod
+	def autosize(cls, root, max_interpolation_count = 100, slack = 1):
+		(minx, miny, maxx, maxy) = (None, None, None, None)
+		for (svg_object, transformation_matrix) in cls.walk_with_transformation_matrix(root):
+			if transformation_matrix is None:
+				transformation_matrix = TransformationMatrix.identity()
+			for vertex in svg_object.hull_vertices(max_interpolation_count = max_interpolation_count):
+				transformed = transformation_matrix.apply(vertex)
+				if (minx is None) or (transformed.x < minx):
+					minx = transformed.x
+				if (maxx is None) or (transformed.x > maxx):
+					maxx = transformed.x
+				if (miny is None) or (transformed.y < miny):
+					miny = transformed.y
+				if (maxy is None) or (transformed.y > maxy):
+					maxy = transformed.y
+
+		if minx is None:
+			return
+
+		minx -= slack / 2
+		miny -= slack / 2
+		maxx += slack / 2
+		maxy += slack / 2
+
+		width = maxx - minx
+		height = maxy - miny
+		root.extents = Vector2D(width, height)
+		for svg_object in root.getall():
+			if svg_object._TAG_NAME != "defs":
+				svg_object.apply_transform(TransformationMatrix.translate(Vector2D(-minx, -miny)))

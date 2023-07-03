@@ -41,8 +41,7 @@ class SVGRect(SVGObject, SVGXYObject, SVGWidthHeightObject, SVGStyleObject):
 	def p4(self):
 		return Vector2D(self.pos.x + self.extents.x, self.pos.y)
 
-	@property
-	def vertices(self):
+	def hull_vertices(self, max_interpolation_count = 4):
 		yield self.p1
 		yield self.p2
 		yield self.p3

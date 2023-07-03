@@ -22,12 +22,12 @@ import xml.dom.minidom
 
 class XMLTools():
 	@classmethod
-	def find_all_elements(cls, node, tagname):
-		return (child for child in node.childNodes if (child.nodeType == child.ELEMENT_NODE) and (child.tagName == tagname))
+	def find_all_elements(cls, node, tagname = None, constraint = None):
+		return (child for child in node.childNodes if (child.nodeType == child.ELEMENT_NODE) and ((tagname is None) or (child.tagName == tagname)) and ((constraint is None) or constraint(child)))
 
 	@classmethod
-	def find_first_element(cls, node, tagname):
-		return next(cls.find_all_elements(node, tagname))
+	def find_first_element(cls, node, tagname = None, constraint = None):
+		return next(cls.find_all_elements(node, tagname, constraint))
 
 	@classmethod
 	def walk_elements(cls, node, tagname = None, constraint = None):
@@ -36,6 +36,21 @@ class XMLTools():
 				yield node
 			for child in node.childNodes:
 				yield from cls.walk_elements(child, tagname = tagname, constraint = constraint)
+
+	@classmethod
+	def _walk_elements_with_context(cls, node, context, transform_context_function, exclude, parent = None):
+		yield (node, context)
+		for child in node.childNodes:
+			if (child.nodeType == child.ELEMENT_NODE) and (child.tagName not in exclude):
+				child_context = transform_context_function(context, parent, child)
+				yield from cls._walk_elements_with_context(child, child_context, transform_context_function, exclude, parent = node)
+
+	@classmethod
+	def walk_elements_with_context(cls, node, root_context, transform_context_function, exclude = None):
+		assert(node.nodeType == node.ELEMENT_NODE)
+		if exclude is None:
+			exclude = tuple()
+		yield from cls._walk_elements_with_context(node = node, context = root_context, transform_context_function = transform_context_function, exclude = exclude)
 
 	@classmethod
 	def default_get_attribute(cls, node, name, default_value = None):
@@ -54,3 +69,10 @@ class XMLTools():
 	def try_remove_attribute(cls, node, name):
 		if node.hasAttribute(name):
 			node.removeAttribute(name)
+
+	@classmethod
+	def all_parent_elements(cls, node):
+		while node is not None:
+			if node.nodeType == node.ELEMENT_NODE:
+				yield node
+			node = node.parentNode

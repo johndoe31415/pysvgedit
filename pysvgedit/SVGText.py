@@ -81,6 +81,11 @@ class SVGText(SVGObject, SVGStyleObject):
 		svg_text.node.appendChild(SVGTextSpan.new(pos = pos, text = text).node)
 		return svg_text
 
+	def hull_vertices(self, max_interpolation_count = 4):
+		inside_shape = self.svg_document.defs.get(self.style.shape_inside)
+		if inside_shape is not None:
+			yield from inside_shape.hull_vertices(max_interpolation_count = max_interpolation_count)
+
 	@property
 	def tspans(self):
 		return (SVGTextSpan(node) for node in XMLTools.find_all_elements(self.node, "tspan"))

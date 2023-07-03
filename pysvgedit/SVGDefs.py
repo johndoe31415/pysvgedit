@@ -19,6 +19,7 @@
 #
 
 from .SVGObject import SVGObject
+from .XMLTools import XMLTools
 
 @SVGObject.register
 class SVGDefs(SVGObject):
@@ -27,3 +28,10 @@ class SVGDefs(SVGObject):
 	@classmethod
 	def new(cls):
 		return cls(cls._new_element())
+
+	def get(self, shape_spec):
+		if (shape_spec is not None) and shape_spec.startswith("url(#") and shape_spec.endswith(")"):
+			shape_id = shape_spec[5 : -1]
+			node = XMLTools.find_first_element(self.node, constraint = lambda node: node.getAttribute("id") == shape_id)
+			return SVGObject.attempt_handle(node)
+		return None

@@ -46,6 +46,10 @@ class Vector2D():
 	def ortho(self):
 		return Vector2D(self.y, self.x)
 
+	@classmethod
+	def angle(self, phi):
+		return Vector2D(cos(phi), sin(phi))
+
 	def __matmul__(self, other):
 		# Scalar product
 		return (self.x * other.y) - (other.x * self.y)
