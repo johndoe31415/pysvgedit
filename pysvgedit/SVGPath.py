@@ -135,7 +135,8 @@ class SVGPathElementArc():
 		thetha_step = delta_thetha / (max_interpolation_count - 1)
 		for i in range(max_interpolation_count):
 			thetha = thetha_1 + i * thetha_step
-			vertex = Vector2D(r.x * math.cos(thetha), r.y * math.sin(thetha)).rotate(phi) + center
+
+			vertex = Vector2D.angled(thetha).cmul(r).rotate(phi) + center
 			yield vertex
 
 
