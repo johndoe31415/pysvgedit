@@ -108,16 +108,6 @@ class SVGPathElementArc():
 		# F.6.5 Step 3
 		center = center_prime.rotate(phi) + ((p0 + p1) / 2)
 
-		print(f"{p0           = }")
-		print(f"{p1           = }")
-		print(f"{phi          = }")
-		print(f"{pos_prime    = }")
-		print(f"{r            = }")
-		print(f"{coeff        = }")
-		print(f"{center_prime = }")
-		print(f"{center       = }")
-		print()
-
 		# F.6.5 Step 4
 		h1 = (pos_prime - center_prime).cdiv(r)
 		h2 = (-pos_prime - center_prime).cdiv(r)
@@ -129,13 +119,9 @@ class SVGPathElementArc():
 		elif (self.sweep) and delta_thetha < 0:
 			delta_thetha += 2 * math.pi
 
-		yield center
-
-
 		thetha_step = delta_thetha / (max_interpolation_count - 1)
 		for i in range(max_interpolation_count):
 			thetha = thetha_1 + i * thetha_step
-
 			vertex = Vector2D.angled(thetha).cmul(r).rotate(phi) + center
 			yield vertex
 

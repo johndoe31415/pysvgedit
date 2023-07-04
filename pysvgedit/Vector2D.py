@@ -61,7 +61,7 @@ class Vector2D():
 		return Vector2D(cos(phi) * self.x - sin(phi) * self.y, sin(phi) * self.x + cos(phi) * self.y)
 
 	def angle_between(self, other):
-		return acos((self @ other) / (self.length * other.length))
+		return other.angle - self.angle
 
 	def cmul(self, other):
 		# Component-wise product
