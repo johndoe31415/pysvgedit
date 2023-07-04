@@ -19,7 +19,7 @@
 #
 
 import re
-from math import sqrt, sin, cos, tan, isclose, pi
+from math import sqrt, sin, cos, tan, isclose, pi, atan2, acos
 
 class Vector2D():
 	def __init__(self, x = 0, y = 0):
@@ -47,11 +47,25 @@ class Vector2D():
 		return Vector2D(self.y, self.x)
 
 	@classmethod
-	def angle(self, phi):
+	def angled(self, phi):
 		return Vector2D(cos(phi), sin(phi))
+
+	@property
+	def angle(self):
+		return atan2(self.y, self.x)
 
 	def lerp(self, other, t):
 		return ((1 - t) * self) + (t * other)
+
+	def rotate(self, phi):
+		return Vector2D(cos(phi) * self.x - sin(phi) * self.y, sin(phi) * self.x + cos(phi) * self.y)
+
+	def angle_between(self, other):
+		return acos((self @ other) / (abs(self.length * other.length)))
+
+	def cmul(self, other):
+		# Component-wise product
+		return Vector2D(self.x * other.y, other.x * other.y)
 
 	def __matmul__(self, other):
 		# Scalar product
@@ -59,6 +73,12 @@ class Vector2D():
 
 	def __add__(self, vector):
 		return Vector2D(self.x + vector.x, self.y + vector.y)
+
+	def __sub__(self, vector):
+		return Vector2D(self.x - vector.x, self.y - vector.y)
+
+	def __neg__(self):
+		return Vector2D(-self.x, -self.y)
 
 	def __mul__(self, scalar):
 		return Vector2D(self.x * scalar, self.y * scalar)

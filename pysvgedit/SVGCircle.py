@@ -40,7 +40,7 @@ class SVGCircle(SVGObject, SVGXYObject, SVGStyleObject):
 		pos = self.pos
 		r = self.radius
 		for i in range(max_interpolation_count):
-			yield pos + (r * Vector2D.angle((i / max_interpolation_count) * 2 * math.pi))
+			yield pos + (r * Vector2D.angled((i / max_interpolation_count) * 2 * math.pi))
 
 	@classmethod
 	def new(cls, pos, radius):

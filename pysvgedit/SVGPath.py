@@ -19,6 +19,7 @@
 #
 
 import re
+import math
 import contextlib
 import dataclasses
 from .SVGObject import SVGObject, SVGStyleObject
@@ -83,9 +84,51 @@ class SVGPathElementArc():
 		else:
 			return self.pos
 
-	def hull_vertices(self, p0, max_interpolation_count = 2):
-		yield p0
-		yield self.apply(p0)
+	def hull_vertices(self, p0, max_interpolation_count = 50):
+		# F.6.5 Step 1
+		phi = self.xrotation / 180 * math.pi
+		p1 = self.apply(p0)
+		pos_prime = ((p0 - p1) / 2).rotate(phi)
+
+		# Correction of out-of-range radii, F.6.6
+		Lambda = ((pos_prime.x ** 2) / (self.radius.x ** 2)) + ((pos_prime.y ** 2) / (self.radius.y ** 2))
+		if Lambda > 1:
+			r = math.sqrt(Lambda) * self.radius
+		else:
+			r = self.radius
+
+		# F.6.5 Step 2
+		numerator = ((r.x ** 2) * (r.y ** 2)) - ((r.x ** 2) * (pos_prime.y ** 2)) - ((r.y ** 2) * (pos_prime.x ** 2))
+		denominator = ((r.x ** 2) * (pos_prime.y ** 2)) + ((r.y ** 2) * (pos_prime.x ** 2))
+		coeff = math.sqrt(numerator / denominator)
+		if self.large_arc == self.sweep:
+			coeff = -coeff
+		center_prime = coeff * Vector2D(r.x * pos_prime.y / r.y, -r.y * pos_prime.x / r.x)
+
+		# F.6.5 Step 3
+		center = center_prime.rotate(-phi) + ((p0 + p1) / 2)
+
+
+		# F.6.5 Step 4
+#		thetha_1 = Vector2D(1, 0).angle_between(Vector2D((pos_prime.x - center_prime.x) / r.x, (pos_prime.y - center_prime.y) / r.y))
+#		delta_thetha = (Vector2D((pos_prime.x - center_prime.x) / r.x, (pos_prime.y - center_prime.y) / r.y).angle_between(Vector2D((-pos_prime.x - center_prime.x) / r.x, (-pos_prime.y - center_prime.y) / r.y))) % (2 * math.pi)
+
+		thetha_1 = (p0 - center).angle
+		thetha_2 = (p1 - center).angle
+		delta_thetha = thetha_2 - thetha_1
+
+		delta_thetha = delta_thetha % (2 * math.pi)
+		if not self.sweep:
+			delta_thetha = -delta_thetha
+
+		thetha_step = delta_thetha / (max_interpolation_count - 1)
+		for i in range(max_interpolation_count):
+			thetha = thetha_1 + i * thetha_step
+			vertex = Vector2D(r.x * math.cos(thetha), r.y * math.sin(thetha)).rotate(phi) + center
+			yield vertex
+
+#		yield p0
+#		yield self.apply(p0)
 
 @dataclasses.dataclass
 class SVGPathElementBezier():
@@ -265,6 +308,7 @@ class SVGPath(SVGObject, SVGStyleObject):
 	def __append_path(self, cmd):
 		self._pos = cmd.apply(self._pos)
 		self.node.setAttribute("d", f"{self.node.getAttribute('d')} {cmd.serialize()}")
+		return self
 
 	def horizontal(self, x, relative = False):
 		return self.__append_path(SVGPathElementHorizontal(x = x, relative = relative))

@@ -57,6 +57,22 @@ path.arcto(rect.p2, radius = 40)
 path.arcto(rect.p1, radius = 20)
 path.style["stroke"] = "#ff8000"
 
+
+origin = pysvgedit.Vector2D(20, -100)
+delta = pysvgedit.Vector2D(20, 10)
+path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = 25, sweep = False, large_arc = False, radius = pysvgedit.Vector2D(20, 30), relative = True)
+path.style["stroke"] = "#aaaaaa"
+
+path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = 25, sweep = False, large_arc = True, radius = pysvgedit.Vector2D(20, 30), relative = True)
+path.style["stroke"] = "#888888"
+
+path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = 25, sweep = True, large_arc = False, radius = pysvgedit.Vector2D(20, 30), relative = True)
+path.style["stroke"] = "#445544"
+
+path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = 25, sweep = True, large_arc = True, radius = pysvgedit.Vector2D(20, 30), relative = True)
+path.style["stroke"] = "#115511"
+
+
 circle = layer.add(pysvgedit.SVGCircle.new(pos = define_circle.pos, radius = define_circle.radius))
 circle.style["stroke"] = "#0000ff"
 text = layer.add(pysvgedit.SVGText.new(text = "This is text in a circle that should wrap and be centered as well"))
