@@ -34,4 +34,4 @@ from .SVGTransformation import FormatTextTransformation, ChangeVisibilityTransfo
 from .Convenience import Convenience
 from .Exceptions import SVGException
 
-VERSION = "0.0.4rc0"
+VERSION = "0.0.4"
