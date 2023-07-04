@@ -105,18 +105,24 @@ class SVGPathElementBezier():
 		else:
 			return self.p3
 
-	def hull_vertices(self, p0, max_interpolation_count = 4):
-		# Convex hull is guaranteed to be within control points (but usually
-		# overestimates); interpolation would be more precise, but also more
-		# costly
-		yield p0
+	def hull_vertices(self, p0, max_interpolation_count = 100):
 		if self.relative:
-			yield p0 + self.p1
-			yield p0 + self.p2
+			p1 = p0 + self.p1
+			p2 = p0 + self.p2
 		else:
-			yield self.p1
-			yield self.p2
-		yield self.apply(p0)
+			p1 = self.p1
+			p2 = self.p2
+		p3 = self.apply(p0)
+
+		for i in range(max_interpolation_count):
+			t = i / (max_interpolation_count - 1)
+			a = p0.lerp(p1, t)
+			b = p1.lerp(p2, t)
+			c = p2.lerp(p3, t)
+			d = a.lerp(b, t)
+			e = b.lerp(c, t)
+			vertex = d.lerp(e, t)
+			yield vertex
 
 
 @dataclasses.dataclass

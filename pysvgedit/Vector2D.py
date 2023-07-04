@@ -50,6 +50,9 @@ class Vector2D():
 	def angle(self, phi):
 		return Vector2D(cos(phi), sin(phi))
 
+	def lerp(self, other, t):
+		return ((1 - t) * self) + (t * other)
+
 	def __matmul__(self, other):
 		# Scalar product
 		return (self.x * other.y) - (other.x * self.y)
