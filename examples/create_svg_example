@@ -55,8 +55,8 @@ path.lineto(rect.p4)
 path.arcto(rect.p3, radius = 40)
 path.arcto(rect.p2, radius = 40)
 path.arcto(rect.p1, radius = 20)
+path.close()
 path.style["stroke"] = "#ff8000"
-
 
 origin = pysvgedit.Vector2D(20, -100)
 delta = pysvgedit.Vector2D(20, 10)
@@ -115,5 +115,5 @@ for vertex in list(pysvgedit.Convenience.interpolate_extents(doc, max_interpolat
 	circle.style["stroke"] = "#ff3000"
 	circle.style["stroke-width"] = "0.25px"
 
-#pysvgedit.Convenience.autosize(doc)
+pysvgedit.Convenience.autosize(doc)
 doc.writefile("example.svg")

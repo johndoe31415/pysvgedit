@@ -27,6 +27,9 @@ from .Vector2D import Vector2D
 
 @dataclasses.dataclass
 class SVGPathElementClose():
+	def serialize(self):
+		return "z"
+
 	def apply(self, pos):
 		return pos
 
