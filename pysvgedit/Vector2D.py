@@ -65,7 +65,11 @@ class Vector2D():
 
 	def cmul(self, other):
 		# Component-wise product
-		return Vector2D(self.x * other.y, self.x * other.y)
+		return Vector2D(self.x * other.x, self.y * other.y)
+
+	def cdiv(self, other):
+		# Component-wise quotient
+		return Vector2D(self.x / other.x, self.y / other.y)
 
 	def xmul(self, other):
 		# Cross product

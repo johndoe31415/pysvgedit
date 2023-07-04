@@ -119,8 +119,10 @@ class SVGPathElementArc():
 		print()
 
 		# F.6.5 Step 4
-		thetha_1 = Vector2D(1, 0).angle_between(Vector2D((pos_prime.x - center_prime.x) / r.x, (pos_prime.y - center_prime.y) / r.y))
-		delta_thetha = Vector2D((pos_prime.x - center_prime.x) / r.x, (pos_prime.y - center_prime.y) / r.y).angle_between(Vector2D((-pos_prime.x - center_prime.x) / r.x, (-pos_prime.y - center_prime.y) / r.y))
+		h1 = (pos_prime - center_prime).cdiv(r)
+		h2 = (-pos_prime - center_prime).cdiv(r)
+		thetha_1 = Vector2D(1, 0).angle_between(h1)
+		delta_thetha = h1.angle_between(h2)
 
 		if (not self.sweep) and delta_thetha > 0:
 			delta_thetha -= 2 * math.pi
