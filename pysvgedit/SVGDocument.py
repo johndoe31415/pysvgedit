@@ -29,12 +29,13 @@ class SVGDocument(SVGObject, SVGWidthHeightObject):
 	_DEFAULT_WIDTH = 300
 	_DEFAULT_HEIGHT = 150
 	_NAMESPACES = {
-		"inkscape": "http://www.inkscape.org/namespaces/inkscape",
-		"sodipodi": "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
-		"svg": "http://www.w3.org/2000/svg",
-		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-		"cc": "http://creativecommons.org/ns#",
-		"dc": "http://purl.org/dc/elements/1.1/",
+		"inkscape":	"http://www.inkscape.org/namespaces/inkscape",
+		"sodipodi":	"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+		"svg":		"http://www.w3.org/2000/svg",
+		"rdf":		"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"cc":		"http://creativecommons.org/ns#",
+		"dc":		"http://purl.org/dc/elements/1.1/",
+		"xlink":	"http://www.w3.org/1999/xlink",
 	}
 
 	def __init__(self, svg_node):

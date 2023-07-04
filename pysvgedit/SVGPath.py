@@ -88,7 +88,7 @@ class SVGPathElementArc():
 		# F.6.5 Step 1
 		phi = self.xrotation / 180 * math.pi
 		p1 = self.apply(p0)
-		pos_prime = ((p0 - p1) / 2).rotate(phi)
+		pos_prime = ((p0 - p1) / 2).rotate(-phi)
 
 		# Correction of out-of-range radii, F.6.6
 		Lambda = ((pos_prime.x ** 2) / (self.radius.x ** 2)) + ((pos_prime.y ** 2) / (self.radius.y ** 2))
@@ -106,20 +106,29 @@ class SVGPathElementArc():
 		center_prime = coeff * Vector2D(r.x * pos_prime.y / r.y, -r.y * pos_prime.x / r.x)
 
 		# F.6.5 Step 3
-		center = center_prime.rotate(-phi) + ((p0 + p1) / 2)
+		center = center_prime.rotate(phi) + ((p0 + p1) / 2)
 
+		print(f"{p0           = }")
+		print(f"{p1           = }")
+		print(f"{phi          = }")
+		print(f"{pos_prime    = }")
+		print(f"{r            = }")
+		print(f"{coeff        = }")
+		print(f"{center_prime = }")
+		print(f"{center       = }")
+		print()
 
 		# F.6.5 Step 4
-#		thetha_1 = Vector2D(1, 0).angle_between(Vector2D((pos_prime.x - center_prime.x) / r.x, (pos_prime.y - center_prime.y) / r.y))
-#		delta_thetha = (Vector2D((pos_prime.x - center_prime.x) / r.x, (pos_prime.y - center_prime.y) / r.y).angle_between(Vector2D((-pos_prime.x - center_prime.x) / r.x, (-pos_prime.y - center_prime.y) / r.y))) % (2 * math.pi)
+		thetha_1 = Vector2D(1, 0).angle_between(Vector2D((pos_prime.x - center_prime.x) / r.x, (pos_prime.y - center_prime.y) / r.y))
+		delta_thetha = Vector2D((pos_prime.x - center_prime.x) / r.x, (pos_prime.y - center_prime.y) / r.y).angle_between(Vector2D((-pos_prime.x - center_prime.x) / r.x, (-pos_prime.y - center_prime.y) / r.y))
 
-		thetha_1 = (p0 - center).angle
-		thetha_2 = (p1 - center).angle
-		delta_thetha = thetha_2 - thetha_1
+		if (not self.sweep) and delta_thetha > 0:
+			delta_thetha -= 2 * math.pi
+		elif (self.sweep) and delta_thetha < 0:
+			delta_thetha += 2 * math.pi
 
-		delta_thetha = delta_thetha % (2 * math.pi)
-		if not self.sweep:
-			delta_thetha = -delta_thetha
+		yield center
+
 
 		thetha_step = delta_thetha / (max_interpolation_count - 1)
 		for i in range(max_interpolation_count):
@@ -127,8 +136,6 @@ class SVGPathElementArc():
 			vertex = Vector2D(r.x * math.cos(thetha), r.y * math.sin(thetha)).rotate(phi) + center
 			yield vertex
 
-#		yield p0
-#		yield self.apply(p0)
 
 @dataclasses.dataclass
 class SVGPathElementBezier():

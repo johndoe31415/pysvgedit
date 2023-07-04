@@ -61,15 +61,19 @@ class Vector2D():
 		return Vector2D(cos(phi) * self.x - sin(phi) * self.y, sin(phi) * self.x + cos(phi) * self.y)
 
 	def angle_between(self, other):
-		return acos((self @ other) / (abs(self.length * other.length)))
+		return acos((self @ other) / (self.length * other.length))
 
 	def cmul(self, other):
 		# Component-wise product
-		return Vector2D(self.x * other.y, other.x * other.y)
+		return Vector2D(self.x * other.y, self.x * other.y)
+
+	def xmul(self, other):
+		# Cross product
+		return self.x * other.y - self.y * other.x
 
 	def __matmul__(self, other):
-		# Scalar product
-		return (self.x * other.y) - (other.x * self.y)
+		# Dot product / scalar product
+		return (self.x * other.x) + (self.y * other.y)
 
 	def __add__(self, vector):
 		return Vector2D(self.x + vector.x, self.y + vector.y)

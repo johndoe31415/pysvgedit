@@ -60,16 +60,17 @@ path.style["stroke"] = "#ff8000"
 
 origin = pysvgedit.Vector2D(20, -100)
 delta = pysvgedit.Vector2D(20, 10)
-path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = 25, sweep = False, large_arc = False, radius = pysvgedit.Vector2D(20, 30), relative = True)
-path.style["stroke"] = "#aaaaaa"
+xrotation = 65
+path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = xrotation, sweep = False, large_arc = False, radius = pysvgedit.Vector2D(20, 30), relative = True)
+path.style["stroke"] = "#aaaa44"
 
-path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = 25, sweep = False, large_arc = True, radius = pysvgedit.Vector2D(20, 30), relative = True)
-path.style["stroke"] = "#888888"
+path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = xrotation, sweep = False, large_arc = True, radius = pysvgedit.Vector2D(20, 30), relative = True)
+path.style["stroke"] = "#118811"
 
-path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = 25, sweep = True, large_arc = False, radius = pysvgedit.Vector2D(20, 30), relative = True)
-path.style["stroke"] = "#445544"
+path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = xrotation, sweep = True, large_arc = False, radius = pysvgedit.Vector2D(20, 30), relative = True)
+path.style["stroke"] = "#788996"
 
-path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = 25, sweep = True, large_arc = True, radius = pysvgedit.Vector2D(20, 30), relative = True)
+path = layer.add(pysvgedit.SVGPath.new(origin)).arcto(delta, xrotation = xrotation, sweep = True, large_arc = True, radius = pysvgedit.Vector2D(20, 30), relative = True)
 path.style["stroke"] = "#115511"
 
 
@@ -114,5 +115,5 @@ for vertex in list(pysvgedit.Convenience.interpolate_extents(doc, max_interpolat
 	circle.style["stroke"] = "#ff3000"
 	circle.style["stroke-width"] = "0.25px"
 
-pysvgedit.Convenience.autosize(doc)
+#pysvgedit.Convenience.autosize(doc)
 doc.writefile("example.svg")
