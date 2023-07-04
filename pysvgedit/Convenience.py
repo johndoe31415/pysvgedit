@@ -63,13 +63,7 @@ class Convenience():
 		text_obj.style["text-align"] = halign
 		text_obj.style["font-family"] = font
 		cls.style_set(text_obj.style, fill = fill, stroke = stroke)
-
 		parent.add(text_obj)
-
-
-	@classmethod
-	def extents(cls, svg_object, transformation_matrix):
-		pass
 
 	@classmethod
 	def walk_with_transformation_matrix(cls, root):
@@ -79,7 +73,7 @@ class Convenience():
 				if transformation_matrix is None:
 					transformation_matrix = matrix
 				else:
-					transformation_matrix = transformation_matrix * matrix
+					transformation_matrix = matrix * transformation_matrix
 			return transformation_matrix
 
 		for (node, transformation_matrix) in XMLTools.walk_elements_with_context(root.node, root_context = root.transformation_matrix, transform_context_function = _transform_context_function, exclude = set([ "defs" ])):

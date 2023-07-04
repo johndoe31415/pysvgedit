@@ -88,13 +88,15 @@ for vertex in rect.hull_vertices():
 	xformed = matrix.apply(vertex)
 	circle = layer.add(pysvgedit.SVGCircle.new(pos = xformed, radius = 3))
 
+group.add(pysvgedit.SVGImage.new(pos = pysvgedit.Vector2D(50, 50), extents = pysvgedit.Vector2D(50, 50), filename = "examples/face10x10.png"))
+
 
 layer = doc.add(pysvgedit.SVGGroup.new(is_layer = True))
 layer.label = "Extents"
 for vertex in list(pysvgedit.Convenience.interpolate_extents(doc, max_interpolation_count = 16)):
-	circle = layer.add(pysvgedit.SVGCircle.new(pos = vertex, radius = 1))
-	circle.style["stroke"] = "#ff0000"
-
+	circle = layer.add(pysvgedit.SVGCircle.new(pos = vertex, radius = 0.25))
+	circle.style["stroke"] = "#ff3000"
+	circle.style["stroke-width"] = "0.25px"
 
 pysvgedit.Convenience.autosize(doc)
 doc.writefile("example.svg")
