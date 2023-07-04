@@ -19,7 +19,7 @@
 #
 
 import re
-from math import sqrt, sin, cos, tan, isclose, pi, atan2, acos
+from math import sqrt, sin, cos, tan, isclose, pi, atan2
 
 class Vector2D():
 	def __init__(self, x = 0, y = 0):

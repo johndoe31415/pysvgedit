@@ -52,17 +52,17 @@ class Convenience():
 		if (attribute is not None) and (attribute not in cls._ALLOWED_ATTRIBUTE):
 			raise SVGLibUsageException(f"attribute must be one of {', '.join(sorted(cls._ALLOWED_ATTRIBUTE))}, but was: {attribute}")
 		if (x is None) and (y is None) and (pos is None):
-			raise SVGLibUsageException(f"Either scalars 'x'/'y' or vector 'pos' must be given.")
+			raise SVGLibUsageException("Either scalars 'x'/'y' or vector 'pos' must be given.")
 		if (x is None) != (y is None):
-			raise SVGLibUsageException(f"Either both scalars 'x'/'y' must be given or neither.")
+			raise SVGLibUsageException("Either both scalars 'x'/'y' must be given or neither.")
 		if (x is not None) and (pos is not None):
-			raise SVGLibUsageException(f"Not all of 'x'/'y'/'pos' may be given simultaneously, 'x'/'y' and 'pos' are mutually exclusive.")
+			raise SVGLibUsageException("Not all of 'x'/'y'/'pos' may be given simultaneously, 'x'/'y' and 'pos' are mutually exclusive.")
 		if (width is None) and (height is None) and (extents is None):
-			raise SVGLibUsageException(f"Either scalars 'width'/'height' or vector 'extents' must be given.")
+			raise SVGLibUsageException("Either scalars 'width'/'height' or vector 'extents' must be given.")
 		if (width is None) and (height is not None):
 			raise SVGLibUsageException("When 'height' is not none, 'width' must be given as well.")
 		if (width is not None) and (extents is not None):
-			raise SVGLibUsageException(f"Not all of 'width'/'height'/'extents' may be given simultaneously, 'width'/'height' and 'extents' are mutually exclusive.")
+			raise SVGLibUsageException("Not all of 'width'/'height'/'extents' may be given simultaneously, 'width'/'height' and 'extents' are mutually exclusive.")
 
 		if width is not None:
 			extents = Vector2D(width, height or font_size)

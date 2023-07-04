@@ -104,6 +104,8 @@ class SVGObject():
 	def transformation_matrix(self):
 		if self.node.hasAttribute("transform"):
 			return SVGTransform.parse(self.node.getAttribute("transform"))
+		else:
+			return None
 
 	@property
 	def absolute_transformation_matrix(self):

@@ -22,6 +22,7 @@ import base64
 import mimetypes
 from .Vector2D import Vector2D
 from .SVGObject import SVGObject, SVGXYObject, SVGWidthHeightObject
+from .Exceptions import SVGLibUsageException
 
 @SVGObject.register
 class SVGImage(SVGObject, SVGXYObject, SVGWidthHeightObject):
