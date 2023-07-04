@@ -26,6 +26,7 @@ from .SVGObject import SVGObject
 
 class Convenience():
 	_ALLOWED_HALIGN = set([ "left", "center", "right", "justify" ])
+	_ALLOWED_ATTRIBUTE = set([ "none", "bold", "italics" ])
 
 	@classmethod
 	def style_set(cls, style, fill, stroke):
@@ -45,25 +46,42 @@ class Convenience():
 
 
 	@classmethod
-	def text(cls, parent, x, y, text, width = None, height = None, halign = "left", font = "sans-serif", font_size = 12, fill = "#000000", stroke = None):
+	def text(cls, parent, text, x = None, y = None, pos = None, extents = None, width = None, height = None, halign = "left", font = "sans-serif", font_size = 12, fill = "#000000", stroke = None, attribute = None):
 		if halign not in cls._ALLOWED_HALIGN:
 			raise SVGLibUsageException(f"halign must be one of {', '.join(sorted(cls._ALLOWED_HALIGN))}, but was: {halign}")
-
+		if (attribute is not None) and (attribute not in cls._ALLOWED_ATTRIBUTE):
+			raise SVGLibUsageException(f"attribute must be one of {', '.join(sorted(cls._ALLOWED_ATTRIBUTE))}, but was: {attribute}")
+		if (x is None) and (y is None) and (pos is None):
+			raise SVGLibUsageException(f"Either scalars 'x'/'y' or vector 'pos' must be given.")
+		if (x is None) != (y is None):
+			raise SVGLibUsageException(f"Either both scalars 'x'/'y' must be given or neither.")
+		if (x is not None) and (pos is not None):
+			raise SVGLibUsageException(f"Not all of 'x'/'y'/'pos' may be given simultaneously, 'x'/'y' and 'pos' are mutually exclusive.")
+		if (width is None) and (height is None) and (extents is None):
+			raise SVGLibUsageException(f"Either scalars 'width'/'height' or vector 'extents' must be given.")
 		if (width is None) and (height is not None):
 			raise SVGLibUsageException("When 'height' is not none, 'width' must be given as well.")
-		if (width is not None) and (height is None):
-			height = font_size
+		if (width is not None) and (extents is not None):
+			raise SVGLibUsageException(f"Not all of 'width'/'height'/'extents' may be given simultaneously, 'width'/'height' and 'extents' are mutually exclusive.")
 
-		if width is None:
-			rect_extents = None
-		else:
-			rect_extents = Vector2D(width, height)
-		text_obj = SVGText.new(pos = Vector2D(x, y), text = text, rect_extents = rect_extents)
+		if width is not None:
+			extents = Vector2D(width, height or font_size)
+		if x is not None:
+			pos = Vector2D(x, y)
+
+		text_obj = SVGText.new(pos = pos, text = text, rect_extents = extents)
 		text_obj.style["font-size"] = f"{font_size}px"
 		text_obj.style["text-align"] = halign
 		text_obj.style["font-family"] = font
 		cls.style_set(text_obj.style, fill = fill, stroke = stroke)
+
+		if attribute == "bold":
+			text_obj.style["font-weight"] = "bold"
+		elif attribute == "italics":
+			text_obj.style["font-style"] = "italic"
+
 		parent.add(text_obj)
+		return text_obj
 
 	@classmethod
 	def walk_with_transformation_matrix(cls, root):
