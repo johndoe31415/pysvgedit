@@ -73,7 +73,6 @@ for vertex in rect.hull_vertices():
 	xformed = matrix.apply(vertex)
 	circle = layer.add(pysvgedit.SVGCircle.new(pos = xformed, radius = 3))
 
-
 group = doc.add(pysvgedit.SVGGroup.new())
 group.apply_transform(pysvgedit.TransformationMatrix.rotate(0.3))
 
@@ -88,6 +87,14 @@ matrix = rect.absolute_transformation_matrix
 for vertex in rect.hull_vertices():
 	xformed = matrix.apply(vertex)
 	circle = layer.add(pysvgedit.SVGCircle.new(pos = xformed, radius = 3))
+
+
+layer = doc.add(pysvgedit.SVGGroup.new(is_layer = True))
+layer.label = "Extents"
+for vertex in list(pysvgedit.Convenience.interpolate_extents(doc, max_interpolation_count = 16)):
+	circle = layer.add(pysvgedit.SVGCircle.new(pos = vertex, radius = 1))
+	circle.style["stroke"] = "#ff0000"
+
 
 pysvgedit.Convenience.autosize(doc)
 doc.writefile("example.svg")

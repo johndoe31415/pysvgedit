@@ -29,6 +29,10 @@ class SVGPathElementClose():
 	def apply(self, pos):
 		return pos
 
+	def hull_vertices(self, p0, max_interpolation_count = 0):
+		return
+		yield
+
 @dataclasses.dataclass
 class SVGPathElementBasic():
 	_IDENTIFIER = None
@@ -47,8 +51,17 @@ class SVGPathElementBasic():
 class SVGPathElementMove(SVGPathElementBasic):
 	_IDENTIFIER = "m"
 
+	def hull_vertices(self, p0, max_interpolation_count = 0):
+		return
+		yield
+
 class SVGPathElementLine(SVGPathElementBasic):
 	_IDENTIFIER = "l"
+
+	def hull_vertices(self, p0, max_interpolation_count = 100):
+		yield p0
+		yield self.apply(p0)
+
 
 @dataclasses.dataclass
 class SVGPathElementArc():
@@ -70,6 +83,9 @@ class SVGPathElementArc():
 		else:
 			return self.pos
 
+	def hull_vertices(self, p0, max_interpolation_count = 2):
+		yield p0
+		yield self.apply(p0)
 
 @dataclasses.dataclass
 class SVGPathElementBezier():
@@ -89,6 +105,19 @@ class SVGPathElementBezier():
 		else:
 			return self.p3
 
+	def hull_vertices(self, p0, max_interpolation_count = 4):
+		# Convex hull is guaranteed to be within control points (but usually
+		# overestimates); interpolation would be more precise, but also more
+		# costly
+		yield p0
+		if self.relative:
+			yield p0 + self.p1
+			yield p0 + self.p2
+		else:
+			yield self.p1
+			yield self.p2
+		yield self.apply(p0)
+
 
 @dataclasses.dataclass
 class SVGPathElementHorizontal():
@@ -106,6 +135,10 @@ class SVGPathElementHorizontal():
 		else:
 			return Vector2D(self.x, pos.y)
 
+	def hull_vertices(self, p0, max_interpolation_count = 2):
+		yield p0
+		yield self.apply(p0)
+
 @dataclasses.dataclass
 class SVGPathElementVertical():
 	_IDENTIFIER = "v"
@@ -121,6 +154,10 @@ class SVGPathElementVertical():
 			return Vector2D(pos.x, pos.y + self.y)
 		else:
 			return Vector2D(pos.x, self.y)
+
+	def hull_vertices(self, p0, max_interpolation_count = 2):
+		yield p0
+		yield self.apply(p0)
 
 class SVGPathParser():
 	_CMD_BEGIN = re.compile(r"^[,\s]*(?P<cmd>[a-zA-Z])(?P<tail>.*)")
@@ -245,6 +282,12 @@ class SVGPath(SVGObject, SVGStyleObject):
 
 	def close(self):
 		return self.__append_path(SVGPathElementClose())
+
+	def hull_vertices(self, max_interpolation_count = 100):
+		pos = None
+		for cmd in self.parsed:
+			yield from cmd.hull_vertices(pos, max_interpolation_count = max_interpolation_count)
+			pos = cmd.apply(pos)
 
 	@contextlib.contextmanager
 	def returnto(self):

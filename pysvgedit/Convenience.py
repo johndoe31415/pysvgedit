@@ -88,21 +88,26 @@ class Convenience():
 				yield (svg_object, transformation_matrix)
 
 	@classmethod
-	def autosize(cls, root, max_interpolation_count = 100, slack = 1):
-		(minx, miny, maxx, maxy) = (None, None, None, None)
+	def interpolate_extents(cls, root, max_interpolation_count = 100):
 		for (svg_object, transformation_matrix) in cls.walk_with_transformation_matrix(root):
 			if transformation_matrix is None:
 				transformation_matrix = TransformationMatrix.identity()
 			for vertex in svg_object.hull_vertices(max_interpolation_count = max_interpolation_count):
 				transformed = transformation_matrix.apply(vertex)
-				if (minx is None) or (transformed.x < minx):
-					minx = transformed.x
-				if (maxx is None) or (transformed.x > maxx):
-					maxx = transformed.x
-				if (miny is None) or (transformed.y < miny):
-					miny = transformed.y
-				if (maxy is None) or (transformed.y > maxy):
-					maxy = transformed.y
+				yield transformed
+
+	@classmethod
+	def autosize(cls, root, max_interpolation_count = 100, slack = 1):
+		(minx, miny, maxx, maxy) = (None, None, None, None)
+		for transformed in cls.interpolate_extents(root = root, max_interpolation_count = max_interpolation_count):
+			if (minx is None) or (transformed.x < minx):
+				minx = transformed.x
+			if (maxx is None) or (transformed.x > maxx):
+				maxx = transformed.x
+			if (miny is None) or (transformed.y < miny):
+				miny = transformed.y
+			if (maxy is None) or (transformed.y > maxy):
+				maxy = transformed.y
 
 		if minx is None:
 			return

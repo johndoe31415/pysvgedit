@@ -84,7 +84,11 @@ class SVGText(SVGObject, SVGStyleObject):
 	def hull_vertices(self, max_interpolation_count = 4):
 		inside_shape = self.svg_document.defs.get(self.style.shape_inside)
 		if inside_shape is not None:
+			# If inside shape is defined, all is well; otherwise we would need
+			# to render the actual text/glyphs to determine the extents, which
+			# we don't do.
 			yield from inside_shape.hull_vertices(max_interpolation_count = max_interpolation_count)
+
 
 	@property
 	def tspans(self):
