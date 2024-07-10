@@ -1,5 +1,5 @@
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2023 Johannes Bauer
+#	Copyright (C) 2023-2024 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #

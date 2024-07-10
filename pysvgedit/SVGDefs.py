@@ -1,5 +1,5 @@
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2023 Johannes Bauer
+#	Copyright (C) 2023-2024 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #
@@ -32,6 +32,9 @@ class SVGDefs(SVGObject):
 	def get(self, shape_spec):
 		if (shape_spec is not None) and shape_spec.startswith("url(#") and shape_spec.endswith(")"):
 			shape_id = shape_spec[5 : -1]
-			node = XMLTools.find_first_element(self.node, constraint = lambda node: node.getAttribute("id") == shape_id)
+			try:
+				node = XMLTools.find_first_element(self.node, constraint = lambda node: node.getAttribute("id") == shape_id)
+			except StopIteration:
+				return None
 			return SVGObject.attempt_handle(node)
 		return None

@@ -1,5 +1,5 @@
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2023 Johannes Bauer
+#	Copyright (C) 2023-2024 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #
@@ -88,7 +88,6 @@ class SVGText(SVGObject, SVGStyleObject):
 			# to render the actual text/glyphs to determine the extents, which
 			# we don't do.
 			yield from inside_shape.hull_vertices(max_interpolation_count = max_interpolation_count)
-
 
 	@property
 	def tspans(self):
