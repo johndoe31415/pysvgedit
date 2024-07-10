@@ -1,5 +1,5 @@
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2023 Johannes Bauer
+#	Copyright (C) 2023-2024 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #
@@ -209,7 +209,7 @@ class SVGPathElementVertical():
 
 class SVGPathParser():
 	_CMD_BEGIN = re.compile(r"^[,\s]*(?P<cmd>[a-zA-Z])(?P<tail>.*)")
-	_FLOAT = re.compile(r"^[,\s]*(?P<float>-?(\d*)?(\.\d*)?)(?P<tail>.*)")
+	_FLOAT = re.compile(r"^[,\s]*(?P<float>-?(\d*)?(\.\d*)?([eE]-?\d+)?)(?P<tail>.*)")
 	_INT = re.compile(r"^[,\s]*(?P<int>-?\d+)(?P<tail>.*)")
 
 	def __init__(self):
@@ -273,7 +273,7 @@ class SVGPathParser():
 			elif cmd in "zZ":
 				self._cmds.append(SVGPathElementClose())
 			else:
-				raise NotImplementedError(cmd)
+				raise NotImplementedError(f"Parsing path command: \"{cmd}\"")
 
 
 @SVGObject.register
