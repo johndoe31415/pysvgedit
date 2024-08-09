@@ -1,5 +1,5 @@
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2023 Johannes Bauer
+#	Copyright (C) 2023-2024 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #
@@ -62,6 +62,9 @@ class Vector2D():
 
 	def angle_between(self, other):
 		return other.angle - self.angle
+
+	def max_xy(self, other: "Vector2D"):
+		return Vector2D(max(self.x, other.x), max(self.y, other.y))
 
 	def cmul(self, other):
 		# Component-wise product
