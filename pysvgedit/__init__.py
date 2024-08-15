@@ -1,5 +1,5 @@
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2023 Johannes Bauer
+#	Copyright (C) 2023-2024 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #
@@ -18,6 +18,36 @@
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+"""\
+pysvgedit: SVG manipulation toolkit
+
+The root element is a SVGDocument, which you can easily write to a file. To
+each SVGObject, elements can be appended. For example, this writes a SVG file
+with a single rectangle:
+
+	import pysvgedit
+	doc = pysvgedit.SVGDocument.new()
+	doc.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(10, 20), extents = pysvgedit.Vector2D(100, 150)))
+	doc.writefile("output.svg")
+
+pysvgedit also supports layers. Here is a new layer that is added and a red
+circle (color #ff0000) and blue (color #0000ff) text is added inside that
+layer:
+
+	import pysvgedit
+	doc = pysvgedit.SVGDocument.new()
+	layer = doc.add(pysvgedit.SVGGroup.new(is_layer = True))
+	layer.name = "My layer"
+
+	circle = layer.add(pysvgedit.SVGCircle.new(pos = pysvgedit.Vector2D(30, 20), radius = 5))
+	circle.style["stroke"] = "#ff0000"
+
+	text = layer.add(pysvgedit.SVGText.new(pos = pysvgedit.Vector2D(50, 50), text = "My text"))
+	text.style["fill"] = "#0000ff"
+
+	doc.writefile("output.svg")
+"""
+
 from .Vector2D import Vector2D, TransformationMatrix, SVGTransform
 from .SVGDefs import SVGDefs
 from .SVGDocument import SVGDocument
@@ -25,7 +55,7 @@ from .SVGGroup import SVGGroup
 from .SVGStyle import SVGStyle
 from .SVGRect import SVGRect
 from .SVGCircle import SVGCircle
-from .SVGText import SVGText
+from .SVGText import SVGTextSpan, SVGText
 from .SVGPath import SVGPath
 from .SVGImage import SVGImage
 from .SVGAnimation import SVGAnimation, SVGAnimationMode
