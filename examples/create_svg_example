@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2023 Johannes Bauer
+#	Copyright (C) 2023-2024 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #
@@ -42,6 +42,15 @@ text = layer.add(pysvgedit.SVGText.new(pos = pysvgedit.Vector2D(210, 100), rect_
 
 rect = layer.add(pysvgedit.SVGRect.new(pos = pysvgedit.Vector2D(10, 10), extents = pysvgedit.Vector2D(200, 100)))
 rect.style["stroke"] = "#00ff00"
+
+
+multiline_text = layer.add(pysvgedit.SVGText.new(pos = pysvgedit.Vector2D(-130, 150), text = "Multiline red\n"))
+multiline_text.tspan.style["fill"] = "#ff0000"
+tspan = multiline_text.add_span(pysvgedit.SVGTextSpan.new(text = "And green\n"))
+tspan.style["fill"] = "#00ff00"
+tspan = multiline_text.add_span(pysvgedit.SVGTextSpan.new(text = "And bold blue\n"))
+tspan.style["fill"] = "#0000ff"
+tspan.style["font-weight"] = "bold"
 
 path = layer.add(pysvgedit.SVGPath.new(pysvgedit.Vector2D(10, 10)))
 path.lineto(pysvgedit.Vector2D(20, -30))

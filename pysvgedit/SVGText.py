@@ -78,7 +78,7 @@ class SVGText(SVGObject, SVGStyleObject):
 			svg_text.post_add_hook = post_add_hook
 
 		svg_text.style.default_text()
-		svg_text.node.appendChild(SVGTextSpan.new(pos = pos, text = text).node)
+		svg_text.add_span(SVGTextSpan.new(pos = pos, text = text))
 		return svg_text
 
 	def hull_vertices(self, max_interpolation_count = 4):
@@ -88,6 +88,10 @@ class SVGText(SVGObject, SVGStyleObject):
 			# to render the actual text/glyphs to determine the extents, which
 			# we don't do.
 			yield from inside_shape.hull_vertices(max_interpolation_count = max_interpolation_count)
+
+	def add_span(self, svg_text_span: SVGTextSpan):
+		self.node.appendChild(svg_text_span.node)
+		return svg_text_span
 
 	@property
 	def tspans(self):
