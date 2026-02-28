@@ -1,5 +1,5 @@
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2024 Johannes Bauer
+#	Copyright (C) 2023-2026 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #
@@ -64,4 +64,4 @@ from .SVGTransformation import FormatTextTransformation, ChangeVisibilityTransfo
 from .Convenience import Convenience
 from .Exceptions import SVGException
 
-VERSION = "0.0.6rc0"
+VERSION = "0.0.6"

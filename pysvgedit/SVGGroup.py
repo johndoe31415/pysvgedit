@@ -1,5 +1,5 @@
 #	pysvgedit - SVG manipulation toolkit
-#	Copyright (C) 2023-2023 Johannes Bauer
+#	Copyright (C) 2023-2026 Johannes Bauer
 #
 #	This file is part of pysvgedit.
 #
@@ -35,6 +35,14 @@ class SVGGroup(SVGObject, SVGStyleObject):
 			self.node.setAttribute("inkscape:groupmode", "layer")
 		else:
 			XMLTools.try_remove_attribute(self.node, "inkscape:groupmode")
+
+	@property
+	def highlight_color(self):
+		return self._default_get_attribute("inkscape:highlight-color")
+
+	@highlight_color.setter
+	def highlight_color(self, value: str):
+		self.node.setAttribute("inkscape:highlight-color", value)
 
 	@classmethod
 	def new(cls, is_layer = False):
